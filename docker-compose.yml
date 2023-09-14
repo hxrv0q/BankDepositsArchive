@@ -1,0 +1,15 @@
+version: '3'
+services:
+  sql_server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "YourStrong!PasswOrd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: [ "CMD", "/opt/mssql-tools/bin/sqlcmd", "-U", "sa", "-P", "YourStrong!PasswOrd", "-Q", "SELECT 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      
