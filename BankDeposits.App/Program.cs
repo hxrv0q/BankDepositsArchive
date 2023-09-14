@@ -19,7 +19,7 @@ if (connectionString != null)
                                          JOIN Account a ON d.ID = a.DepositorID
                                          JOIN Deposit de ON a.ID = de.AccountID
                                          GROUP BY d.ID , d.LastName, d.FirstName, d.Patronymic
-                                         HAVING COUNT(de.ID) > 2;
+                                         HAVING COUNT(de.ID) > 1;
                              """;
 
         var data = database.ExecuteQuery(query);
