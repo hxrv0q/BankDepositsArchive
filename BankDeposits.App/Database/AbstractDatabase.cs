@@ -2,7 +2,7 @@ using System.Data;
 
 namespace BankDeposits.App.Database;
 
-public class AbstractDatabase<TConnection, TCommand, TDataAdapter> : IDatabase
+public class AbstractDatabase<TConnection, TCommand, TDataAdapter>
     where TConnection : IDbConnection, new()
     where TCommand : IDbCommand, new()
     where TDataAdapter : IDbDataAdapter, new()
