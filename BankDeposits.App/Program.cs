@@ -9,8 +9,6 @@ var connectionString = configuration.GetConnectionString("BankDepositsDatabase")
 
 try
 {
-    var database = new MsSqlDatabase(connectionString);
-
     const string query =
         """
         SELECT TOP 10 d.ID, d.LastName, d.FirstName, d.Patronymic, COUNT(de.ID) AS VisitCount
@@ -22,6 +20,8 @@ try
         ORDER BY VisitCount DESC
         """;
 
+    var database = new MsSqlDatabase(connectionString);
+    
     var data = database.ExecuteQuery(query);
     var table = data.Tables[0];
 

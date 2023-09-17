@@ -11,13 +11,6 @@ public class AbstractDatabase<TConnection, TCommand, TDataAdapter>
 
     protected AbstractDatabase(string connectionString) => ConnectionString = connectionString;
 
-    public IDbConnection GetConnection() => new TConnection { ConnectionString = ConnectionString };
-
-    public IDbCommand GetCommand(string query, IDbConnection connection) =>
-        new TCommand { CommandText = query, Connection = connection };
-
-    public IDbDataAdapter GetAdapter(IDbCommand command) => new TDataAdapter { SelectCommand = (TCommand)command };
-
     public DataSet ExecuteQuery(string query)
     {
         using var connection = GetConnection();
@@ -30,6 +23,16 @@ public class AbstractDatabase<TConnection, TCommand, TDataAdapter>
         var dataSet = new DataSet();
         adapter.Fill(dataSet);
 
+        connection.Close();
+
         return dataSet;
     }
+
+    private IDbConnection GetConnection() => new TConnection { ConnectionString = ConnectionString };
+
+    private static IDbCommand GetCommand(string query, IDbConnection connection) =>
+        new TCommand { CommandText = query, Connection = connection };
+
+    private static IDbDataAdapter GetAdapter(IDbCommand command) =>
+        new TDataAdapter { SelectCommand = (TCommand)command };
 }
