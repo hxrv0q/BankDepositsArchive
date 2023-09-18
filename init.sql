@@ -37,9 +37,11 @@ BEGIN TRANSACTION;
 
 BEGIN TRY
     -- Declare variables
-    DECLARE @counter INT = 1;
+    DECLARE @counter INT;
     DECLARE @depositorID UNIQUEIDENTIFIER;
     DECLARE @accountID UNIQUEIDENTIFIER;
+    
+    SET @counter = 1;
 
     -- Loop to insert 10 depositors
     WHILE @counter <= 10
@@ -51,7 +53,7 @@ BEGIN TRY
         -- Insert 1 account for each depositor
         SET @accountID = NEWID();
         INSERT INTO Account (ID, DepositorID, AccountNumber, Amount)
-        VALUES (@accountID, @depositorID, CONCAT('ACC', @counter), 0);
+        VALUES (@accountID, @depositorID, CONCAT('ACC', @counter), 1000*@counter);
 
         -- Insert 1-3 deposits randomly for each account
         DECLARE @depositCounter INT = 1;
