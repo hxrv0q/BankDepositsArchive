@@ -1,6 +1,6 @@
-﻿using System.Data;
-using BankDeposits.App.Configuration;
+﻿using BankDeposits.App.Configuration;
 using BankDeposits.App.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 var configuration = AppConfig.LoadConfiguration();
@@ -9,25 +9,36 @@ var connectionString = configuration.GetConnectionString("BankDepositsDatabase")
 
 try
 {
-    const string query =
-        """
-        SELECT TOP 10 d.ID, d.LastName, d.FirstName, d.Patronymic, COUNT(de.ID) AS VisitCount
-        FROM Depositor d
-            INNER JOIN Account a ON a.DepositorID = d.ID
-            INNER JOIN Deposit de ON de.AccountID = a.ID
-        GROUP BY d.ID, d.LastName, d.FirstName, d.Patronymic
-        HAVING COUNT(de.ID) > 1
-        ORDER BY VisitCount DESC
-        """;
+    var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+    optionsBuilder.UseSqlServer(connectionString);
 
-    var database = new MsSqlDatabase(connectionString);
-    
-    var data = database.ExecuteQuery(query);
-    var table = data.Tables[0];
+    using var dbContext = new AppDbContext(optionsBuilder.Options);
 
-    foreach (DataRow row in table.Rows)
+    var query = dbContext.Depositors
+        .SelectMany(d => d.Accounts)
+        .SelectMany(a => a.Deposits)
+        .GroupBy(d => new
+        {
+            d.Account.Depositor.Id,
+            d.Account.Depositor.LastName,
+            d.Account.Depositor.FirstName,
+            d.Account.Depositor.Patronymic
+        })
+        .Select(g => new
+        {
+            g.Key.Id,
+            g.Key.LastName,
+            g.Key.FirstName,
+            g.Key.Patronymic,
+            visitCount = g.Count()
+        })
+        .Where(g => g.visitCount > 1)
+        .OrderBy(g => g.visitCount)
+        .ToList();
+
+    foreach (var depositor in query)
     {
-        Console.WriteLine(string.Join(", ", row.ItemArray));
+        Console.WriteLine($"${depositor.Id} {depositor.LastName} {depositor.FirstName} {depositor.Patronymic} {depositor.visitCount}");
     }
 }
 catch (Exception e)
