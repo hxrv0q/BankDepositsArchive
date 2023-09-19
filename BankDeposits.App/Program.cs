@@ -15,6 +15,9 @@ try
     using var dbContext = new AppDbContext(optionsBuilder.Options);
 
     var query = dbContext.Depositors
+        .Include(depositor => depositor.Accounts)
+        .ThenInclude(account => account.Deposits)
+        .AsEnumerable()
         .SelectMany(d => d.Accounts)
         .SelectMany(a => a.Deposits)
         .GroupBy(d => new
