@@ -1,47 +1,21 @@
-﻿using BankDeposits.App.Configuration;
+﻿using BankDeposits.App.Http;
+using BankDeposits.App.Configuration;
 using BankDeposits.App.Database;
+using BankDeposits.App.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 var configuration = AppConfig.LoadConfiguration();
-var connectionString = configuration.GetConnectionString("BankDepositsDatabase")
-                       ?? throw new Exception("Connection string is not found");
+var connectionString = configuration.GetConnectionString("BankDepositsDatabase");
 
-try
-{
-    var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-    optionsBuilder.UseSqlServer(connectionString);
+var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+optionsBuilder.UseSqlServer(connectionString);
 
-    using var dbContext = new AppDbContext(optionsBuilder.Options);
+var dbContext = new AppDbContext(optionsBuilder.Options);
+var service = new AppService(dbContext);
 
-    var query = dbContext.Depositors
-        .SelectMany(d => d.Accounts)
-        .SelectMany(a => a.Deposits)
-        .GroupBy(d => new
-        {
-            d.Account.Depositor.Id,
-            d.Account.Depositor.LastName,
-            d.Account.Depositor.FirstName,
-            d.Account.Depositor.Patronymic
-        })
-        .Select(g => new
-        {
-            g.Key.Id,
-            g.Key.LastName,
-            g.Key.FirstName,
-            g.Key.Patronymic,
-            visitCount = g.Count()
-        })
-        .Where(g => g.visitCount > 1)
-        .OrderBy(g => g.visitCount)
-        .ToList();
+var server = new WebServer(service);
+var host = server.BuildWebHost();
 
-    foreach (var depositor in query)
-    {
-        Console.WriteLine($"${depositor.Id} {depositor.LastName} {depositor.FirstName} {depositor.Patronymic} {depositor.visitCount}");
-    }
-}
-catch (Exception e)
-{
-    Console.Error.WriteLine(e);
-}
+host.Run();
