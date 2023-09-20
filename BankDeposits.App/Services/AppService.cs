@@ -9,31 +9,30 @@ public class AppService
 
     public AppService(AppDbContext dbContext) => _dbContext = dbContext;
 
-    public List<object> GetDepositorsWithMultipleVisits(int minVisits)
-    {
-        return _dbContext.Depositors
-            .Include(depositor => depositor.Accounts)
-            .ThenInclude(account => account.Deposits)
-            .AsEnumerable()
-            .SelectMany(depositor => depositor.Accounts)
-            .SelectMany(account => account.Deposits)
-            .GroupBy(deposit => new
-            {
-                deposit.Account.Depositor.Id,
-                deposit.Account.Depositor.LastName,
-                deposit.Account.Depositor.FirstName,
-                deposit.Account.Depositor.Patronymic,
-            })
-            .Select(group => new
-            {
-                group.Key.Id,
-                group.Key.LastName,
-                group.Key.FirstName,
-                group.Key.Patronymic,
-                visitCount = group.Count()
-            })
-            .Where(group => group.visitCount >= minVisits)
-            .OrderBy(group => group.visitCount)
-            .ToList<object>();
-    }
+    public async Task<List<object>> GetDepositorsWithMultipleVisits(int minVisits) => await _dbContext.Depositors
+        .Include(depositor => depositor.Accounts)
+        .ThenInclude(account => account.Deposits)
+        .ToListAsync()
+        .ContinueWith(t =>
+            t.Result
+                .SelectMany(depositor => depositor.Accounts)
+                .SelectMany(account => account.Deposits)
+                .GroupBy(deposit => new
+                {
+                    deposit.Account.Depositor.Id,
+                    deposit.Account.Depositor.LastName,
+                    deposit.Account.Depositor.FirstName,
+                    deposit.Account.Depositor.Patronymic,
+                })
+                .Select(group => new
+                {
+                    group.Key.Id,
+                    group.Key.LastName,
+                    group.Key.FirstName,
+                    group.Key.Patronymic,
+                    visitCount = group.Count()
+                })
+                .Where(group => group.visitCount >= minVisits)
+                .OrderBy(group => group.visitCount)
+                .ToList<object>());
 }

@@ -24,7 +24,7 @@ var host = new WebHostBuilder()
         app.Run(async context =>
         {
             var appService = context.RequestServices.GetRequiredService<AppService>();
-            var data = appService.GetDepositorsWithMultipleVisits(2);
+            var data = await appService.GetDepositorsWithMultipleVisits(2);
             
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(JsonSerializer.Serialize(data));
