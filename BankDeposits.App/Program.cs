@@ -1,47 +1,25 @@
 ﻿using BankDeposits.App.Configuration;
 using BankDeposits.App.Database;
+using BankDeposits.App.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 var configuration = AppConfig.LoadConfiguration();
-var connectionString = configuration.GetConnectionString("BankDepositsDatabase")
-                       ?? throw new Exception("Connection string is not found");
+var connectionString = configuration.GetConnectionString("BankDepositsDatabase");
 
 try
 {
     var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
     optionsBuilder.UseSqlServer(connectionString);
 
-    using var dbContext = new AppDbContext(optionsBuilder.Options);
+    await using var dbContext = new AppDbContext(optionsBuilder.Options);
+    var appService = new AppService(dbContext); 
+     
+    var depositors = await appService.GetDepositorsWithMultipleVisits(2);
 
-    var query = dbContext.Depositors
-        .Include(depositor => depositor.Accounts)
-        .ThenInclude(account => account.Deposits)
-        .AsEnumerable()
-        .SelectMany(d => d.Accounts)
-        .SelectMany(a => a.Deposits)
-        .GroupBy(d => new
-        {
-            d.Account.Depositor.Id,
-            d.Account.Depositor.LastName,
-            d.Account.Depositor.FirstName,
-            d.Account.Depositor.Patronymic
-        })
-        .Select(g => new
-        {
-            g.Key.Id,
-            g.Key.LastName,
-            g.Key.FirstName,
-            g.Key.Patronymic,
-            visitCount = g.Count()
-        })
-        .Where(g => g.visitCount > 1)
-        .OrderBy(g => g.visitCount)
-        .ToList();
-
-    foreach (var depositor in query)
+    foreach (var depositor in depositors)
     {
-        Console.WriteLine($"${depositor.Id} {depositor.LastName} {depositor.FirstName} {depositor.Patronymic} {depositor.visitCount}");
+        Console.WriteLine(depositor);
     }
 }
 catch (Exception e)
