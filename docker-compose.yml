@@ -7,9 +7,3 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
-    healthcheck:
-      test: [ "CMD", "/opt/mssql-tools/bin/sqlcmd", "-U", "sa", "-P", "YourStrong!PasswOrd", "-Q", "SELECT 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      
