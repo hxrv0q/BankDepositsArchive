@@ -6,16 +6,16 @@ namespace BankDeposits.App.Models;
 [Table("Account")]
 public class Account
 {
-    [Key, Column("ID")] public Guid Id { get; set; }
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id { get; init; }
 
-    [Column("DepositorID")] public Guid DepositorId { get; set; }
+    [Required] public Guid DepositorId { get; init; }
 
-    public string AccountNumber { get; set; } = null!;
+    [Required, MaxLength(20)] public string AccountNumber { get; init; } = null!;
 
-    [Column(TypeName = "money")] public decimal Amount { get; set; }
+    [Column(TypeName = "money"), Required] public decimal Amount { get; init; }
 
-    [ForeignKey(nameof(DepositorId))]
-    public Depositor Depositor { get; set; } = null!;
+    [ForeignKey(nameof(DepositorId))] public Depositor Depositor { get; init; } = null!;
 
-    public List<Deposit> Deposits { get; set; } = new();
+    public List<Deposit> Deposits { get; init; } = new();
 }

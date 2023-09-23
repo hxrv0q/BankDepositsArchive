@@ -4,25 +4,25 @@ using BankDeposits.App.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-var configuration = AppConfig.LoadConfiguration();
-var connectionString = configuration.GetConnectionString("BankDepositsDatabase");
-
 try
 {
+    var configuration = AppConfig.LoadConfiguration();
+    var connectionString = configuration.GetConnectionString("BankDepositsDatabase");
+
     var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
     optionsBuilder.UseSqlServer(connectionString);
 
     await using var dbContext = new AppDbContext(optionsBuilder.Options);
-    var appService = new AppService(dbContext); 
-     
-    var depositors = await appService.GetDepositorsWithMultipleVisits(2);
+    var appService = new AppService(dbContext);
 
-    foreach (var depositor in depositors)
+    var depositorVisits = await appService.GetDepositorsWithMultipleVisits(2);
+    Console.WriteLine("| Id | Last Name | First Name | Visits |");
+    foreach (var dv in depositorVisits)
     {
-        Console.WriteLine(depositor);
+        Console.WriteLine($"| {dv.Depositor.Id} | {dv.Depositor.LastName} | {dv.Depositor.FirstName} | {dv.Visits} |");
     }
 }
-catch (Exception e)
+catch (Exception exception)
 {
-    Console.Error.WriteLine(e);
+    Console.Error.WriteLine(exception);
 }

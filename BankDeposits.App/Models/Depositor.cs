@@ -6,19 +6,20 @@ namespace BankDeposits.App.Models;
 [Table("Depositor")]
 public class Depositor
 {
-    [Key, Column("ID")] public Guid Id { get; set; }
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id { get; init; }
 
-    public string LastName { get; set; } = null!;
+    [Required, MaxLength(50)] public string LastName { get; init; } = null!;
 
-    public string FirstName { get; set; } = null!;
+    [Required, MaxLength(50)] public string FirstName { get; set; } = null!;
 
-    public string Patronymic { get; set; } = null!;
-    
-    public string PassportSeries { get; set; } = null!;
+    [MaxLength(50)] public string? Patronymic { get; init; }
 
-    public string PassportNumber { get; set; } = null!;
+    [Required, MaxLength(10)] public string PassportSeries { get; init; } = null!;
 
-    public string HomeAddress { get; set; } = null!;
+    [Required, MaxLength(10)] public string PassportNumber { get; init; } = null!;
 
-    public List<Account> Accounts { get; set; } = new();
+    [Required, MaxLength(255)] public string HomeAddress { get; init; } = null!;
+
+    public List<Account> Accounts { get; init; } = new();
 }

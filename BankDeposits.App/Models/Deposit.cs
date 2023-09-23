@@ -6,14 +6,14 @@ namespace BankDeposits.App.Models;
 [Table("Deposit")]
 public class Deposit
 {
-    [Key, Column("ID")] public Guid Id { get; set; }
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id { get; init; }
 
-    [Column("AccountID")] public Guid AccountId { get; set; }
+    [Required] public Guid AccountId { get; init; }
 
-    [Column(TypeName = "money")] public decimal Amount { get; set; }
+    [Column(TypeName = "money"), Required] public decimal Amount { get; init; }
 
-    public DateTime Date { get; set; }
+    [Required] public DateTime Date { get; init; }
 
-    [ForeignKey(nameof(AccountId))]
-    public Account Account { get; set; } = null!;
+    [ForeignKey(nameof(AccountId))] public Account Account { get; init; } = null!;
 }
