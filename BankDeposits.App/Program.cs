@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using BankDeposits.App.Configuration;
 using BankDeposits.App.Database;
 using BankDeposits.App.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,9 +25,14 @@ var host = new WebHostBuilder()
         {
             var appService = context.RequestServices.GetRequiredService<AppService>();
             var data = await appService.GetDepositorsWithMultipleVisits(2);
-            
+
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(JsonSerializer.Serialize(data));
+
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            };
+            await JsonSerializer.SerializeAsync(context.Response.Body, data, options);
         });
     })
     .Build();

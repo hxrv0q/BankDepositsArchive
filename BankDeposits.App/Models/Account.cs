@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BankDeposits.App.Models;
 
@@ -15,7 +16,8 @@ public class Account
 
     [Column(TypeName = "money"), Required] public decimal Amount { get; init; }
 
-    [ForeignKey(nameof(DepositorId))] public Depositor Depositor { get; init; } = null!;
+    [ForeignKey(nameof(DepositorId)), JsonIgnore]
+    public Depositor Depositor { get; init; } = null!;
 
     public List<Deposit> Deposits { get; init; } = new();
 }

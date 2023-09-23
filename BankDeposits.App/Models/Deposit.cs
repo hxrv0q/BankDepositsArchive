@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BankDeposits.App.Models;
 
@@ -15,5 +16,6 @@ public class Deposit
 
     [Required] public DateTime Date { get; init; }
 
-    [ForeignKey(nameof(AccountId))] public Account Account { get; init; } = null!;
+    [ForeignKey(nameof(AccountId)), JsonIgnore]
+    public Account Account { get; init; } = null!;
 }
