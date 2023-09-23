@@ -14,6 +14,7 @@ public class Account
 
     [Column(TypeName = "money")] public decimal Amount { get; set; }
 
+    [ForeignKey(nameof(DepositorId))]
     public Depositor Depositor { get; set; } = null!;
 
     public List<Deposit> Deposits { get; set; } = new();

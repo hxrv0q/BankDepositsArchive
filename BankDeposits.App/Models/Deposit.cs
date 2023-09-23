@@ -14,5 +14,6 @@ public class Deposit
 
     public DateTime Date { get; set; }
 
+    [ForeignKey(nameof(AccountId))]
     public Account Account { get; set; } = null!;
 }

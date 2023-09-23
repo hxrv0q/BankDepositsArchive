@@ -13,6 +13,8 @@ public class Depositor
     public string FirstName { get; set; } = null!;
 
     public string Patronymic { get; set; } = null!;
+    
+    public string PassportSeries { get; set; } = null!;
 
     public string PassportNumber { get; set; } = null!;
 
