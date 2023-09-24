@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace BankDeposits.App.Models;
 
+/// <summary>
+/// Represents a deposit transaction.
+/// </summary>
 [Table("Deposit")]
 public class Deposit
 {

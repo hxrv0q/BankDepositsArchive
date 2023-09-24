@@ -10,30 +10,38 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 var configuration = AppConfig.LoadConfiguration();
-var connectionString = configuration.GetConnectionString("BankDepositsDatabase");
 
 var host = new WebHostBuilder()
     .UseKestrel()
     .ConfigureServices(services =>
     {
-        services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+        services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("BankDepositsDatabase")));
+
         services.AddScoped<AppService>();
+
+        services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
     })
     .Configure(app =>
     {
-        app.Run(async context =>
+        app.UseRouting();
+
+        app.Use(async (context, next) =>
         {
-            var appService = context.RequestServices.GetRequiredService<AppService>();
-            var data = await appService.GetDepositorsWithMultipleVisits(2);
-
             context.Response.ContentType = "application/json";
-
-            var options = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles
-            };
-            await JsonSerializer.SerializeAsync(context.Response.Body, data, options);
+            await next.Invoke();
         });
+
+        app.UseEndpoints(endpoints => {
+            endpoints.MapGet("/", async context => {
+                var appService = context.RequestServices.GetRequiredService<AppService>();
+                var data = await appService.GetDepositorsWithMultipleVisits(2);
+                await JsonSerializer.SerializeAsync(context.Response.Body, data);
+            });
+        });    
     })
     .Build();
 

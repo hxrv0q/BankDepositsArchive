@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace BankDeposits.App.Models;
 
+/// <summary>
+/// Represents a bank account.
+/// </summary>
 [Table("Account")]
 public class Account
 {
