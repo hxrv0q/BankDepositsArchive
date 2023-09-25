@@ -35,8 +35,10 @@ var host = new WebHostBuilder()
             await next.Invoke();
         });
 
-        app.UseEndpoints(endpoints => {
-            endpoints.MapGet("/", async context => {
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapGet("/", async context =>
+            {
                 var appService = context.RequestServices.GetRequiredService<AppService>();
                 var data = await appService.GetDepositorsWithMultipleVisits(2);
                 await JsonSerializer.SerializeAsync(context.Response.Body, data);
