@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankDeposits.App.Database;
 
+/// <summary>
+/// Represents a database context for the application.
+/// </summary>
 public class AppDbContext : DbContext
 {
     public DbSet<Depositor> Depositors { get; init; } = null!;

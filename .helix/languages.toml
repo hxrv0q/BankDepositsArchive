@@ -1,0 +1,7 @@
+[language-server.copilot]
+command = "copilot"
+args = ["--stdio"]
+
+[[language]]
+name = "c-sharp"
+language-servers = ["omnisharp", "copilot"]

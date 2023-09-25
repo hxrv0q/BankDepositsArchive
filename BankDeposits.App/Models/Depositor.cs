@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankDeposits.App.Models;
 
+/// <summary>
+/// Represents a depositor.
+/// </summary>
 [Table("Depositor")]
 public class Depositor
 {

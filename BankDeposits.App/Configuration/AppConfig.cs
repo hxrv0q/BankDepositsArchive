@@ -17,11 +17,6 @@ public static class AppConfig
         return BuildConfiguration(environment);
     }
 
-    /// <summary>
-    /// Builds configuration for the specified environment.
-    /// </summary>
-    /// <param name="environment">The environment for which to build the configuration.</param>
-    /// <returns>An <see cref="IConfigurationRoot"/> with the loaded environment configuration.</returns>
     private static IConfigurationRoot BuildConfiguration(string environment) => new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile($"appsettings.{environment}.json", optional: false)

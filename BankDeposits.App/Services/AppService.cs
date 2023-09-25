@@ -17,6 +17,11 @@ public class AppService
     /// <param name="dbContext">The application's database context.</param>
     public AppService(AppDbContext dbContext) => _dbContext = dbContext;
 
+    /// <summary>
+    /// Gets all depositors with multiple visits.
+    /// </summary>
+    /// <param name="minVisits">The minimum number of visits.</param>
+    /// <returns>A list of <see cref="DepositorVisits"/> objects.</returns>
     public async Task<List<DepositorVisits>> GetDepositorsWithMultipleVisits(int minVisits)
     {
         var depositors = await GetDepositorsWithIncludedRelations();
