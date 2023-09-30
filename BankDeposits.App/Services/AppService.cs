@@ -1,6 +1,7 @@
 using BankDeposits.App.Database;
 using BankDeposits.App.Models;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 namespace BankDeposits.App.Services;
 
@@ -29,19 +30,13 @@ public class AppService
     }
 
     private async Task<List<Depositor>> GetDepositorsWithIncludedRelations() => await _dbContext.Depositors
-        .Include(d => d.Accounts)
-        .ThenInclude(a => a.Deposits)
+        .Find(_ => true)
         .ToListAsync();
 
     private static List<DepositorVisits> FilterAndProjectDepositors(IEnumerable<Depositor> depositors, int minVisits) =>
-        depositors
-            .SelectMany(depositor => depositor.Accounts)
-            .SelectMany(account => account.Deposits, (account, deposit) => new { account, deposit })
-            .GroupBy(ad => ad.account.Depositor)
-            .Where(grouping => grouping.Count() >= minVisits)
-            .Select(grouping => new DepositorVisits { Depositor = grouping.Key, Visits = grouping.Count() })
-            .OrderByDescending(dv => dv.Visits)
-            .ToList();
+        depositors.Select(depositor => new DepositorVisits
+                { Depositor = depositor, Visits = depositor.Accounts.Sum(account => account.Deposits.Count) })
+            .Where(dv => dv.Visits >= minVisits).ToList();
 
 
     /// <summary>

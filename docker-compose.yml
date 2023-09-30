@@ -12,4 +12,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-      
+  
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"

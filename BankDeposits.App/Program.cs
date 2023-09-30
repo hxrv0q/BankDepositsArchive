@@ -5,17 +5,15 @@ using BankDeposits.App.Database;
 using BankDeposits.App.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-var configuration = AppConfig.LoadConfiguration();
 
 var host = new WebHostBuilder()
     .UseKestrel()
     .ConfigureServices(services =>
     {
-        services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("BankDepositsDatabase")));
+        services.AddSingleton<IConfiguration>(AppConfig.LoadConfiguration());
+        services.AddSingleton<AppDbContext>();
 
         services.AddScoped<AppService>();
 
@@ -39,11 +37,16 @@ var host = new WebHostBuilder()
         {
             endpoints.MapGet("/", async context =>
             {
+                if (!int.TryParse(context.Request.Query["visits"], out var visits) || visits < 0)
+                {
+                    visits = 0;
+                }
+
                 var appService = context.RequestServices.GetRequiredService<AppService>();
-                var data = await appService.GetDepositorsWithMultipleVisits(2);
+                var data = await appService.GetDepositorsWithMultipleVisits(visits);
                 await JsonSerializer.SerializeAsync(context.Response.Body, data);
             });
-        });    
+        });
     })
     .Build();
 

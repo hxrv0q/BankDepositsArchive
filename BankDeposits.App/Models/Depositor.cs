@@ -1,28 +1,28 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace BankDeposits.App.Models;
 
 /// <summary>
 /// Represents a depositor.
 /// </summary>
-[Table("Depositor")]
 public class Depositor
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; init; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; init; } = null!;
 
-    [Required, MaxLength(50)] public string LastName { get; init; } = null!;
+    public string LastName { get; init; } = null!;
 
-    [Required, MaxLength(50)] public string FirstName { get; set; } = null!;
+    public string FirstName { get; set; } = null!;
 
-    [MaxLength(50)] public string? Patronymic { get; init; }
+    public string? Patronymic { get; init; }
 
-    [Required, MaxLength(10)] public string PassportSeries { get; init; } = null!;
+    public string PassportSeries { get; init; } = null!;
 
-    [Required, MaxLength(10)] public string PassportNumber { get; init; } = null!;
+    public string PassportNumber { get; init; } = null!;
 
-    [Required, MaxLength(255)] public string HomeAddress { get; init; } = null!;
+    public string HomeAddress { get; init; } = null!;
 
-    public List<Account> Accounts { get; init; } = new();
+    [BsonElement("Accounts")] public List<Account> Accounts { get; init; } = new();
 }
