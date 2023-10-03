@@ -14,6 +14,19 @@ public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
     public async Task<List<TEntity>> GetAllAsync() => await Entities.ToListAsync();
 
     public async Task<TEntity?> GetAsync(Guid? id) => await Entities.FindAsync(id);
+    
+    public async Task<TEntity?> UpdateAsync(TEntity entity)
+    {
+        if (!EntityExists(entity.Id))
+        {
+            return null;
+        }
 
-    protected bool EntityExists(Guid id) => Entities.Any(e => e.Id == id);
+        Context.Update(entity);
+        await Context.SaveChangesAsync();
+        
+        return entity;
+    }
+
+    public bool EntityExists(Guid id) => Entities.Any(e => e.Id == id);
 }

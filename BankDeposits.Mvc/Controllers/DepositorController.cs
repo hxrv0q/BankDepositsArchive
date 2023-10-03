@@ -8,4 +8,6 @@ public class DepositorController : BaseController<Depositor, DepositorService>
     public DepositorController(DepositorService service) : base(service)
     {
     }
+
+
 }
