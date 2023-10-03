@@ -1,0 +1,40 @@
+@using System.Reflection
+@model IEnumerable<IdentifierEntity>
+
+@{
+    var entityType = Model.FirstOrDefault()?.GetType() ?? typeof(IdentifierEntity);
+    ViewData["Title"] = $"{entityType.Name} List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <a asp-action="Create">Create New</a>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        @foreach (var prop in entityType.GetProperties())
+        {
+            <th>@prop.Name</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var entity in Model)
+    {
+        <tr>
+            @foreach (var prop in entityType.GetProperties())
+            {
+                <td>@prop.GetValue(entity)</td>
+            }
+            <td>
+                <a asp-action="Edit" asp-route-id="@entity.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@entity.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@entity.Id">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

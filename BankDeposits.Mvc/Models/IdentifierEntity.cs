@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BankDeposits.Mvc.Models;
 
-public class IdentifierEntity
+public abstract class IdentifierEntity
 {
     [Key]
     public Guid Id { get; set; }

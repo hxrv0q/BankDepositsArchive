@@ -1,6 +1,5 @@
 using BankDeposits.Mvc.Models;
 using BankDeposits.Mvc.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankDeposits.Mvc.Controllers;
 
