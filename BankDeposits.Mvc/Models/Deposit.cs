@@ -7,16 +7,16 @@ namespace BankDeposits.Mvc.Models;
 [Table("Deposit")]
 public class Deposit : IdentifierEntity
 {
-   [Required] 
-   public Guid AccountId { get; set; }
-   
-   [ForeignKey(nameof(AccountId))]
-   [ExcludeInView]
-   public Account Account { get; set; } = null!;
-   
-   [Column(TypeName = "money"), Required]
-   public decimal Amount { get; set; }
-   
-   [Required]
-   public DateTime Date { get; set; }
+    [Required]
+    public Guid AccountId { get; set; }
+
+    [ForeignKey(nameof(AccountId))]
+    [ExcludeInView]
+    public Account Account { get; set; } = null!;
+
+    [Column(TypeName = "money"), Required]
+    public decimal Amount { get; set; }
+
+    [Required]
+    public DateTime Date { get; set; }
 }

@@ -5,5 +5,5 @@ namespace BankDeposits.Mvc.Controllers;
 
 public class AccountController : BaseController<Account, AccountService>
 {
-    public AccountController(AccountService service) : base(service) {}
+    public AccountController(AccountService service) : base(service) { }
 }
