@@ -1,0 +1,33 @@
+@model IdentifierEntity
+
+@{
+    ViewData["Title"] = "Edit " + Model.GetType().Name;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id"/>
+
+    @foreach (var prop in Model.GetType().GetProperties().Where(p => p.Name != "Id"))
+    {
+        <div class="form-group">
+            <label asp-for="@prop.GetValue(Model)">@prop.Name</label>
+            <input asp-for="@prop.GetValue(Model)" class="form-control"/>
+            <span asp-validation-for="@prop.GetValue(Model)" class="text-danger"></span>
+        </div>
+    }
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary"/>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts
+{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
