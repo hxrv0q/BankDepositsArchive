@@ -1,3 +1,4 @@
+using BankDeposits.Mvc.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,6 +11,7 @@ public class Deposit : IdentifierEntity
    public Guid AccountId { get; set; }
    
    [ForeignKey(nameof(AccountId))]
+   [ExcludeInView]
    public Account Account { get; set; } = null!;
    
    [Column(TypeName = "money"), Required]

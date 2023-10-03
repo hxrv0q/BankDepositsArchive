@@ -41,4 +41,15 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
 
         return RedirectToAction(nameof(Index));
     }
+
+    public async virtual Task<IActionResult> Details(Guid id)
+    {
+        var entity = await Service.GetAsync(id);
+        if (entity is null)
+        {
+            return NotFound();
+        }
+
+        return View(entity);
+    }
 }

@@ -32,4 +32,6 @@
     <None Remove="Views\Shared\Entities\**" />
   </ItemGroup>
 
+
+
 </Project>
