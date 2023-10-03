@@ -8,6 +8,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // Add services to the container.
 builder.Services.AddDbContext<BankDepositsContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<DepositorService>();
+builder.Services.AddScoped<AccountService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
