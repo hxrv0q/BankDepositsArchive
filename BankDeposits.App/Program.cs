@@ -5,8 +5,10 @@ using BankDeposits.App.Database;
 using BankDeposits.App.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 var host = new WebHostBuilder()
     .UseKestrel()
@@ -35,15 +37,21 @@ var host = new WebHostBuilder()
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapGet("/logo", async context =>
+            {
+                context.Response.ContentType = "image/png";
+                await context.Response.SendFileAsync("wwwroot/logo.png");
+            });
+
             endpoints.MapGet("/", async context =>
             {
-                if (!int.TryParse(context.Request.Query["visits"], out var visits) || visits < 0)
+                if (!int.TryParse(context.Request.Query["minVisits"], out var minVisits) || minVisits < 0)
                 {
-                    visits = 0;
+                    minVisits = 0;
                 }
 
                 var appService = context.RequestServices.GetRequiredService<AppService>();
-                var data = await appService.GetDepositorsWithMultipleVisits(visits);
+                var data = await appService.GetDepositorsWithMultipleVisits(minVisits);
                 await JsonSerializer.SerializeAsync(context.Response.Body, data);
             });
         });

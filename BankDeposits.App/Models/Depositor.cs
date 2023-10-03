@@ -24,5 +24,6 @@ public class Depositor
 
     public string HomeAddress { get; init; } = null!;
 
-    [BsonElement("Accounts")] public List<Account> Accounts { get; init; } = new();
+    [BsonElement("Accounts")]
+    public List<Account> Accounts { get; init; } = new();
 }

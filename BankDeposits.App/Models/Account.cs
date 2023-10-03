@@ -11,5 +11,6 @@ public class Account
 
     public decimal Amount { get; init; }
 
-    [BsonElement("Deposits")] public List<Deposit> Deposits { get; init; } = new();
+    [BsonElement("Deposits")]
+    public List<Deposit> Deposits { get; init; } = new();
 }
