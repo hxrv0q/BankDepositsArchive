@@ -12,17 +12,23 @@ public class Depositor
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; init; }
 
-    [Required, MaxLength(50)] public string LastName { get; init; } = null!;
+    [Required, MaxLength(50)]
+    public string LastName { get; init; } = null!;
 
-    [Required, MaxLength(50)] public string FirstName { get; set; } = null!;
+    [Required, MaxLength(50)]
+    public string FirstName { get; set; } = null!;
 
-    [MaxLength(50)] public string? Patronymic { get; init; }
+    [MaxLength(50)]
+    public string? Patronymic { get; init; }
 
-    [Required, MaxLength(10)] public string PassportSeries { get; init; } = null!;
+    [Required, MaxLength(10)]
+    public string PassportSeries { get; init; } = null!;
 
-    [Required, MaxLength(10)] public string PassportNumber { get; init; } = null!;
+    [Required, MaxLength(10)]
+    public string PassportNumber { get; init; } = null!;
 
-    [Required, MaxLength(255)] public string HomeAddress { get; init; } = null!;
+    [Required, MaxLength(255)]
+    public string HomeAddress { get; init; } = null!;
 
-    public List<Account> Accounts { get; init; } = new();
+    public List<Account> Accounts { get; init; } = null!;
 }

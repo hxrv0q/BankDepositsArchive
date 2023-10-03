@@ -12,13 +12,17 @@ public class Account
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; init; }
 
-    [Required] public Guid DepositorId { get; init; }
+    [Required]
+    public Guid DepositorId { get; init; }
 
-    [Required, MaxLength(20)] public string AccountNumber { get; init; } = null!;
+    [Required, MaxLength(20)]
+    public string AccountNumber { get; init; } = null!;
 
-    [Column(TypeName = "money"), Required] public decimal Amount { get; init; }
+    [Column(TypeName = "money"), Required]
+    public decimal Amount { get; init; }
 
-    [ForeignKey(nameof(DepositorId))] public Depositor Depositor { get; init; } = null!;
+    [ForeignKey(nameof(DepositorId))]
+    public Depositor Depositor { get; init; } = null!;
 
-    public List<Deposit> Deposits { get; init; } = new();
+    public List<Deposit> Deposits { get; init; } = null!;
 }

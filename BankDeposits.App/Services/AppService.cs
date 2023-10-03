@@ -18,26 +18,19 @@ public class AppService
     /// </summary>
     /// <param name="minVisits">The minimum number of visits.</param>
     /// <returns>A list of <see cref="DepositorVisits"/> objects.</returns>
-    public async Task<List<DepositorVisits>> GetDepositorsWithMultipleVisits(int minVisits)
-    {
-        var depositors = await GetDepositorsWithIncludedRelations();
-        return FilterAndProjectDepositors(depositors, minVisits);
-    }
-
-    private async Task<List<Depositor>> GetDepositorsWithIncludedRelations() => await _dbContext.Depositors
-        .Include(d => d.Accounts)
-        .ThenInclude(a => a.Deposits)
+    public async Task<List<DepositorVisits>> GetDepositorsWithMultipleVisits(int minVisits) => await _dbContext
+        .Depositors
+        .SelectMany(d => d.Accounts)
+        .SelectMany(a => a.Deposits)
+        .GroupBy(d => d.Account.Depositor)
+        .Select(grouping => new DepositorVisits
+        {
+            Depositor = grouping.Key,
+            Visits = grouping.Count()
+        })
+        .Where(dv => dv.Visits >= minVisits)
+        .OrderByDescending(dv => dv.Visits)
         .ToListAsync();
-
-    private static List<DepositorVisits> FilterAndProjectDepositors(IEnumerable<Depositor> depositors, int minVisits) =>
-        depositors
-            .SelectMany(depositor => depositor.Accounts)
-            .SelectMany(account => account.Deposits, (account, deposit) => new { account, deposit })
-            .GroupBy(ad => ad.account.Depositor)
-            .Where(grouping => grouping.Count() >= minVisits)
-            .Select(grouping => new DepositorVisits { Depositor = grouping.Key, Visits = grouping.Count() })
-            .OrderByDescending(dv => dv.Visits)
-            .ToList();
 
 
     /// <summary>
