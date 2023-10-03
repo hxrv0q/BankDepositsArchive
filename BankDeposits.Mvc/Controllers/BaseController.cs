@@ -9,8 +9,36 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
 {
     protected BaseController(TService service) => Service = service;
 
-    protected TService Service { get; }
+    private TService Service { get; }
 
     public async virtual Task<IActionResult> Index() => View(await Service.GetAllAsync());
 
+    public async virtual Task<IActionResult> Edit(Guid id)
+    {
+        var entity = await Service.GetAsync(id);
+        if (entity is null)
+        {
+            return NotFound();
+        }
+
+        return View(entity);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async virtual Task<IActionResult> Edit(Guid id, TEntity entity)
+    {
+        if (id != entity.Id)
+        {
+            return NotFound();
+        }
+
+        var updatedEntity = await Service.UpdateAsync(entity);
+        if (updatedEntity is null)
+        {
+            return NotFound();
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
 }

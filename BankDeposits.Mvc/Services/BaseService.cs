@@ -11,11 +11,11 @@ public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
 
     protected abstract DbSet<TEntity> Entities { get; }
 
-    public async Task<List<TEntity>> GetAllAsync() => await Entities.ToListAsync();
+    public async virtual Task<List<TEntity>> GetAllAsync() => await Entities.ToListAsync();
 
-    public async Task<TEntity?> GetAsync(Guid? id) => await Entities.FindAsync(id);
-    
-    public async Task<TEntity?> UpdateAsync(TEntity entity)
+    public async virtual Task<TEntity?> GetAsync(Guid? id) => await Entities.FindAsync(id);
+
+    public async virtual Task<TEntity?> UpdateAsync(TEntity entity)
     {
         if (!EntityExists(entity.Id))
         {
@@ -24,9 +24,9 @@ public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
 
         Context.Update(entity);
         await Context.SaveChangesAsync();
-        
+
         return entity;
     }
 
-    public bool EntityExists(Guid id) => Entities.Any(e => e.Id == id);
+    private bool EntityExists(Guid id) => Entities.Any(e => e.Id == id);
 }
