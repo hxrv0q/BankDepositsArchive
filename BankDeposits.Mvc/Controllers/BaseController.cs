@@ -52,4 +52,23 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
 
         return View(entity);
     }
+
+    public IActionResult Create() => View();
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(TEntity entity)
+    {
+        if (!ModelState.IsValid)
+        {
+            foreach (var error in ModelState.Values.SelectMany(modelState => modelState.Errors))
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
+            return View(entity);
+        }
+
+        await Service.CreateAsync(entity);
+        return RedirectToAction(nameof(Index));
+    }
 }

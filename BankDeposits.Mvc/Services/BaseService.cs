@@ -28,5 +28,13 @@ public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
         return entity;
     }
 
+    public async virtual Task<TEntity> CreateAsync(TEntity entity)
+    {
+        await Entities.AddAsync(entity);
+        await Context.SaveChangesAsync();
+
+        return entity;
+    }
+
     private bool EntityExists(Guid id) => Entities.Any(e => e.Id == id);
 }

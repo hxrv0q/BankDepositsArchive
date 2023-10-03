@@ -21,5 +21,5 @@ public class Account : IdentifierEntity
     public decimal Amount { get; set; }
 
     [ExcludeInView]
-    public ICollection<Deposit> Deposits { get; set; } = null!;
+    public ICollection<Deposit>? Deposits { get; set; }
 }

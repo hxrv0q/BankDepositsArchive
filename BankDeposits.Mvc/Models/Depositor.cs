@@ -26,5 +26,5 @@ public class Depositor : IdentifierEntity
     public string HomeAddress { get; set; } = null!;
 
     [ExcludeInView]
-    public ICollection<Account> Accounts { get; set; } = null!;
+    public ICollection<Account>? Accounts { get; set; }
 }
