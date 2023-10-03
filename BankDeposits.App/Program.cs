@@ -1,36 +1,22 @@
-﻿using System.Data;
-using BankDeposits.App.Configuration;
+﻿using BankDeposits.App.Configuration;
 using BankDeposits.App.Database;
+using BankDeposits.App.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
+
 var configuration = AppConfig.LoadConfiguration();
-var connectionString = configuration.GetConnectionString("BankDepositsDatabase")
-                       ?? throw new Exception("Connection string is not found");
+var connectionString = configuration.GetConnectionString("BankDepositsDatabase");
 
-try
+var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+optionsBuilder.UseSqlServer(connectionString);
+
+await using var dbContext = new AppDbContext(optionsBuilder.Options);
+var appService = new AppService(dbContext);
+
+var depositorVisits = await appService.GetDepositorsWithMultipleVisits(2);
+Console.WriteLine("| Id | Last Name | First Name | Visits |");
+foreach (var dv in depositorVisits)
 {
-    const string query =
-        """
-        SELECT TOP 10 d.ID, d.LastName, d.FirstName, d.Patronymic, COUNT(de.ID) AS VisitCount
-        FROM Depositor d
-            INNER JOIN Account a ON a.DepositorID = d.ID
-            INNER JOIN Deposit de ON de.AccountID = a.ID
-        GROUP BY d.ID, d.LastName, d.FirstName, d.Patronymic
-        HAVING COUNT(de.ID) > 1
-        ORDER BY VisitCount DESC
-        """;
-
-    var database = new MsSqlDatabase(connectionString);
-    
-    var data = database.ExecuteQuery(query);
-    var table = data.Tables[0];
-
-    foreach (DataRow row in table.Rows)
-    {
-        Console.WriteLine(string.Join(", ", row.ItemArray));
-    }
-}
-catch (Exception e)
-{
-    Console.Error.WriteLine(e);
+    Console.WriteLine($"| {dv.Depositor.Id} | {dv.Depositor.LastName} | {dv.Depositor.FirstName} | {dv.Visits} |");
 }
