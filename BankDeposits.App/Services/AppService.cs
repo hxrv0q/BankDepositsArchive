@@ -11,10 +11,6 @@ public class AppService
 {
     private readonly AppDbContext _dbContext;
 
-    /// <summary>
-    /// Initialize a new instance of the <see cref="AppService"/> class.
-    /// </summary>
-    /// <param name="dbContext">The application's database context.</param>
     public AppService(AppDbContext dbContext) => _dbContext = dbContext;
 
     /// <summary>
