@@ -1,3 +1,39 @@
 @model IEnumerable<BankDeposits.Mvc.Models.Deposit>
 
-@await Html.PartialAsync("EntityViews/_Index", Model)
+@{
+    ViewData["Title"] = "Deposits List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <a asp-action="Create" class="btn btn-primary mb-3">Create New Deposit</a>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+    <th>ID</th>
+    <th>AccountID</th>
+    <th>Amount</th>
+    <th>Date</th>
+    <th>Actions</th>
+    </thead>
+
+    <tbody>
+    @foreach (var deposit in Model)
+    {
+        <tr>
+            <td>@deposit.Id</td>
+            <td>@deposit.AccountId</td>
+            <td>@deposit.Amount</td>
+            <td>@deposit.Date</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@deposit.Id" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Details" asp-route-id="@deposit.Id" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Delete" asp-route-id="@deposit.Id" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

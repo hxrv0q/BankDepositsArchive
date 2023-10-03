@@ -1,3 +1,45 @@
 @model IEnumerable<BankDeposits.Mvc.Models.Depositor>
 
-@await Html.PartialAsync("EntityViews/_Index", Model)
+@{
+    ViewData["Title"] = "Depositors List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <a asp-action="Create" class="btn btn-primary mb-3">Create New Depositor</a>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Patronymic</th>
+        <th>Passport Series</th>
+        <th>Passport Number</th>
+        <th>Home Address</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var depositor in Model)
+    {
+        <tr>
+            <td>@depositor.Id</td>
+            <td>@depositor.LastName</td>
+            <td>@depositor.FirstName</td>
+            <td>@depositor.Patronymic</td>
+            <td>@depositor.PassportSeries</td>
+            <td>@depositor.PassportNumber</td>
+            <td>@depositor.HomeAddress</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@depositor.Id" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Details" asp-route-id="@depositor.Id" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Delete" asp-route-id="@depositor.Id" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

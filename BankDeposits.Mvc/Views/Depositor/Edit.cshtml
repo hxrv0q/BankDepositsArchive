@@ -1,0 +1,55 @@
+@model BankDeposits.Mvc.Models.Depositor
+
+@{
+    ViewData["Title"] = $"Edit Depositor with Id {Model.Id}";
+}
+
+<h2>Edit Depositor</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="FirstName" class="control-label">FirstName:</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName" class="control-label">LastName:</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Patronymic" class="control-label">Patronymic:</label>
+        <input asp-for="Patronymic" class="form-control" />
+        <span asp-validation-for="Patronymic" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PassportSeries" class="control-label">PassportSeries:</label>
+        <input asp-for="PassportSeries" class="form-control" />
+        <span asp-validation-for="PassportSeries" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PassportNumber" class="control-label">PassportNumber:</label>
+        <input asp-for="PassportNumber" class="form-control" />
+        <span asp-validation-for="PassportNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HomeAddress" class="control-label">HomeAddress:</label>
+        <input asp-for="HomeAddress" class="form-control" />
+        <span asp-validation-for="HomeAddress" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts
+{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
