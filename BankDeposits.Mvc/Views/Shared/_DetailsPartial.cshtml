@@ -7,8 +7,6 @@
     var properties = type.GetProperties().
         Where(p => p.GetCustomAttribute<NotMappedAttribute>() == null).
         ToArray();
-
-    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
 }
 
 <dl class="row">
