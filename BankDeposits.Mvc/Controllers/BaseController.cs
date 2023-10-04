@@ -78,9 +78,7 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
-        Console.WriteLine("Delete confirmed");
         await Service.DeleteAsync(id);
-        Console.WriteLine("Deleted");
         return RedirectToAction(nameof(Index));
     }
 }
