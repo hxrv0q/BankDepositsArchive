@@ -71,9 +71,9 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
         await Service.CreateAsync(entity);
         return RedirectToAction(nameof(Index));
     }
-    
+
     public async Task<IActionResult> Delete(Guid id) => View(await Service.GetAsync(id));
-  
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(Guid id)

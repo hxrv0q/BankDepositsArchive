@@ -26,5 +26,6 @@ public class Depositor : IdentifierEntity
     public string HomeAddress { get; set; } = null!;
 
     [ExcludeInView]
+    [NotMapped]
     public ICollection<Account>? Accounts { get; set; }
 }

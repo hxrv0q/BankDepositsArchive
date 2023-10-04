@@ -9,11 +9,9 @@ public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
 
     protected readonly BankDepositsContext Context;
 
-    protected abstract DbSet<TEntity> Entities { get; }
+    public async virtual Task<List<TEntity>> GetAllAsync() => await Context.Set<TEntity>().ToListAsync();
 
-    public async virtual Task<List<TEntity>> GetAllAsync() => await Entities.ToListAsync();
-
-    public async virtual Task<TEntity?> GetAsync(Guid? id) => await Entities.FindAsync(id);
+    public async virtual Task<TEntity?> GetAsync(Guid? id) => await Context.Set<TEntity>().FindAsync(id);
 
     public async virtual Task<TEntity?> UpdateAsync(TEntity entity)
     {
@@ -30,11 +28,23 @@ public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
 
     public async virtual Task<TEntity> CreateAsync(TEntity entity)
     {
-        await Entities.AddAsync(entity);
+        await Context.AddAsync(entity);
         await Context.SaveChangesAsync();
 
         return entity;
     }
 
-    private bool EntityExists(Guid id) => Entities.Any(e => e.Id == id);
+    public async virtual Task DeleteAsync(Guid id)
+    {
+        var entity = await Context.Set<TEntity>().FindAsync(id);
+        if (entity is null)
+        {
+            return;
+        }
+
+        Context.Remove(entity);
+        await Context.SaveChangesAsync();
+    }
+
+    private bool EntityExists(Guid id) => Context.Set<TEntity>().Any(e => e.Id == id);
 }
