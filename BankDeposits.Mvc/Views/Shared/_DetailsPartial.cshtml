@@ -1,0 +1,22 @@
+@using System.ComponentModel.DataAnnotations.Schema
+@using System.Reflection
+@model IdentifierEntity
+
+@{
+    var type = Model.GetType();
+    var properties = type.GetProperties().
+        Where(p => p.GetCustomAttribute<NotMappedAttribute>() == null).
+        ToArray();
+
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<dl class="row">
+    @foreach (var property in properties)
+    {
+        <dt class="col-sm-2">@property.Name</dt>
+        <dd class="col-sm-10">@property.GetValue(Model)</dd>
+    }
+</dl>
+
+@await Html.PartialAsync("_ActionsPartial", Model)

@@ -1,4 +1,3 @@
-using BankDeposits.Mvc.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,7 +10,7 @@ public class Account : IdentifierEntity
     public Guid DepositorId { get; set; }
 
     [ForeignKey(nameof(DepositorId))]
-    [ExcludeInView]
+    [NotMapped]
     public Depositor Depositor { get; set; } = null!;
 
     [Required, MaxLength(20)]
@@ -20,6 +19,6 @@ public class Account : IdentifierEntity
     [Column(TypeName = "money"), Required]
     public decimal Amount { get; set; }
 
-    [ExcludeInView]
+    [NotMapped]
     public ICollection<Deposit>? Deposits { get; set; }
 }

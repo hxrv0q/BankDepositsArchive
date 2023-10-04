@@ -1,4 +1,3 @@
-using BankDeposits.Mvc.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,7 +24,6 @@ public class Depositor : IdentifierEntity
     [Required, MaxLength(255)]
     public string HomeAddress { get; set; } = null!;
 
-    [ExcludeInView]
     [NotMapped]
     public ICollection<Account>? Accounts { get; set; }
 }

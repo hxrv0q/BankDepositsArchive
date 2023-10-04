@@ -1,0 +1,43 @@
+@using System.ComponentModel.DataAnnotations.Schema
+@using System.Reflection
+@model IEnumerable<IdentifierEntity>
+
+@{
+    var type = Model.FirstOrDefault()?.GetType();
+    var properties = type?.GetProperties().
+        Where(p => p.GetCustomAttribute<NotMappedAttribute>() == null).
+        ToArray();
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<h1>@($"{type?.Name ?? "No Data"} List")</h1>
+
+@Html.ActionLink("Create New", "Create", controller, null, htmlAttributes: new
+{
+    @class = "btn btn-primary"
+})
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        @foreach (var property in properties!)
+        {
+            <th>@property.Name</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var entity in Model)
+    {
+        <tr>
+            @foreach (var property in properties)
+            {
+                <td>@property.GetValue(entity)</td>
+            }
+            <td>
+                @await Html.PartialAsync("_ActionsPartial", entity)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
