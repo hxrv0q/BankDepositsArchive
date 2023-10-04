@@ -7,11 +7,17 @@ namespace BankDeposits.Mvc.Controllers;
 
 public class DepositController : BaseController<Deposit, DepositService>
 {
-    public DepositController(DepositService service) : base(service) {}
+    private readonly AccountService _accountService;
+
+    public DepositController(DepositService depositService, AccountService accountService) : base(depositService)
+    {
+        _accountService = accountService;
+    }
 
     public override IActionResult Create()
     {
-        ViewBag.Accounts = new SelectList(Context.Accounts, nameof(Account.Id), nameof(Account.Number));
+        var accounts = _accountService.GetAll();
+        ViewBag.Accounts = new SelectList(accounts, nameof(Account.Id), nameof(Account.Number));
 
         return View();
     }

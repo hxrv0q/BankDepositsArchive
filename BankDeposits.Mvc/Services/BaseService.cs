@@ -5,13 +5,15 @@ namespace BankDeposits.Mvc.Services;
 
 public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
 {
-    protected BaseService(BankDepositsContext context) => Context = context;
+    private readonly BankDepositsContext _context;
 
-    public readonly BankDepositsContext Context;
+    protected BaseService(BankDepositsContext context) => _context = context;
 
-    public async virtual Task<List<TEntity>> GetAllAsync() => await Context.Set<TEntity>().ToListAsync();
+    public virtual List<TEntity> GetAll() => _context.Set<TEntity>().ToList();
 
-    public async virtual Task<TEntity?> GetAsync(Guid? id) => await Context.Set<TEntity>().FindAsync(id);
+    public async virtual Task<List<TEntity>> GetAllAsync() => await _context.Set<TEntity>().ToListAsync();
+
+    public async virtual Task<TEntity?> GetAsync(Guid? id) => await _context.Set<TEntity>().FindAsync(id);
 
     public async virtual Task<TEntity?> UpdateAsync(TEntity entity)
     {
@@ -20,31 +22,31 @@ public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
             return null;
         }
 
-        Context.Update(entity);
-        await Context.SaveChangesAsync();
+        _context.Update(entity);
+        await _context.SaveChangesAsync();
 
         return entity;
     }
 
     public async virtual Task<TEntity> CreateAsync(TEntity entity)
     {
-        await Context.AddAsync(entity);
-        await Context.SaveChangesAsync();
+        await _context.AddAsync(entity);
+        await _context.SaveChangesAsync();
 
         return entity;
     }
 
     public async virtual Task DeleteAsync(Guid id)
     {
-        var entity = await Context.Set<TEntity>().FindAsync(id);
+        var entity = await _context.Set<TEntity>().FindAsync(id);
         if (entity is null)
         {
             return;
         }
 
-        Context.Remove(entity);
-        await Context.SaveChangesAsync();
+        _context.Remove(entity);
+        await _context.SaveChangesAsync();
     }
 
-    private bool EntityExists(Guid id) => Context.Set<TEntity>().Any(e => e.Id == id);
+    private bool EntityExists(Guid id) => _context.Set<TEntity>().Any(e => e.Id == id);
 }

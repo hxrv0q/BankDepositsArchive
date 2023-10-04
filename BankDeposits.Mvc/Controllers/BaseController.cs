@@ -7,17 +7,15 @@ namespace BankDeposits.Mvc.Controllers;
 public abstract class BaseController<TEntity, TService> : Controller where TEntity : IdentifierEntity
     where TService : BaseService<TEntity>
 {
-    protected BaseController(TService service) => Service = service;
+    private readonly TService _service;
 
-    private TService Service { get; }
+    protected BaseController(TService service) => _service = service;
 
-    protected BankDepositsContext Context => Service.Context;
-
-    public async virtual Task<IActionResult> Index() => View(await Service.GetAllAsync());
+    public async virtual Task<IActionResult> Index() => View(await _service.GetAllAsync());
 
     public async virtual Task<IActionResult> Edit(Guid id)
     {
-        var entity = await Service.GetAsync(id);
+        var entity = await _service.GetAsync(id);
         if (entity is null)
         {
             return NotFound();
@@ -35,7 +33,7 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
             return NotFound();
         }
 
-        var updatedEntity = await Service.UpdateAsync(entity);
+        var updatedEntity = await _service.UpdateAsync(entity);
         if (updatedEntity is null)
         {
             return NotFound();
@@ -46,7 +44,7 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
 
     public async virtual Task<IActionResult> Details(Guid id)
     {
-        var entity = await Service.GetAsync(id);
+        var entity = await _service.GetAsync(id);
         if (entity is null)
         {
             return NotFound();
@@ -70,17 +68,17 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
             return View(entity);
         }
 
-        await Service.CreateAsync(entity);
+        await _service.CreateAsync(entity);
         return RedirectToAction(nameof(Index));
     }
 
-    public async Task<IActionResult> Delete(Guid id) => View(await Service.GetAsync(id));
+    public async Task<IActionResult> Delete(Guid id) => View(await _service.GetAsync(id));
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
-        await Service.DeleteAsync(id);
+        await _service.DeleteAsync(id);
         return RedirectToAction(nameof(Index));
     }
 }
