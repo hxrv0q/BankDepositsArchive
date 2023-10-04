@@ -3,36 +3,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankDeposits.Mvc.Services;
 
-public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
+public abstract class AbstractService<TEntity>
+    where TEntity : IdentifierEntity
 {
     private readonly BankDepositsContext _context;
 
-    protected BaseService(BankDepositsContext context) => _context = context;
+    protected AbstractService(BankDepositsContext context) => _context = context;
 
-    public virtual List<TEntity> GetAll() => _context.Set<TEntity>().ToList();
+    public IEnumerable<TEntity> GetAll() => _context.Set<TEntity>().ToList();
 
     public async virtual Task<List<TEntity>> GetAllAsync() => await _context.Set<TEntity>().ToListAsync();
 
     public async virtual Task<TEntity?> GetAsync(Guid? id) => await _context.Set<TEntity>().FindAsync(id);
 
-    public async virtual Task<TEntity?> UpdateAsync(TEntity entity)
+    public async virtual Task<TEntity?> AddOrUpdateAsync(TEntity entity)
     {
-        if (!EntityExists(entity.Id))
+        if (entity.Id == Guid.Empty)
         {
-            return null;
+            _context.Add(entity);
+        }
+        else
+        {
+            _context.Update(entity);
         }
 
-        _context.Update(entity);
         await _context.SaveChangesAsync();
-
-        return entity;
-    }
-
-    public async virtual Task<TEntity> CreateAsync(TEntity entity)
-    {
-        await _context.AddAsync(entity);
-        await _context.SaveChangesAsync();
-
         return entity;
     }
 
@@ -47,6 +42,4 @@ public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
         _context.Remove(entity);
         await _context.SaveChangesAsync();
     }
-
-    private bool EntityExists(Guid id) => _context.Set<TEntity>().Any(e => e.Id == id);
 }

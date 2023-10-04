@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankDeposits.Mvc.Controllers;
 
 public abstract class BaseController<TEntity, TService> : Controller where TEntity : IdentifierEntity
-    where TService : BaseService<TEntity>
+    where TService : AbstractService<TEntity>
 {
     private readonly TService _service;
 
@@ -33,7 +33,7 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
             return NotFound();
         }
 
-        var updatedEntity = await _service.UpdateAsync(entity);
+        var updatedEntity = await _service.AddOrUpdateAsync(entity);
         if (updatedEntity is null)
         {
             return NotFound();
@@ -68,7 +68,7 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
             return View(entity);
         }
 
-        await _service.CreateAsync(entity);
+        await _service.AddOrUpdateAsync(entity);
         return RedirectToAction(nameof(Index));
     }
 

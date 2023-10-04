@@ -17,7 +17,6 @@ public class AccountController : BaseController<Account, AccountService>
     public override IActionResult Create()
     {
         var depositors = _depositorService.GetAll();
-        // Make dataTExTfield = PassportSeries + PassportNumber
         ViewBag.Depositors = new SelectList(depositors, nameof(Depositor.Id), nameof(Depositor.Id));
 
         return View();
