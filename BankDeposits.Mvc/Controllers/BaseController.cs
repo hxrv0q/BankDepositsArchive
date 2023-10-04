@@ -11,6 +11,8 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
 
     private TService Service { get; }
 
+    protected BankDepositsContext Context => Service.Context;
+
     public async virtual Task<IActionResult> Index() => View(await Service.GetAllAsync());
 
     public async virtual Task<IActionResult> Edit(Guid id)
@@ -53,7 +55,7 @@ public abstract class BaseController<TEntity, TService> : Controller where TEnti
         return View(entity);
     }
 
-    public IActionResult Create() => View();
+    public virtual IActionResult Create() => View();
 
     [HttpPost]
     [ValidateAntiForgeryToken]

@@ -7,7 +7,7 @@ public abstract class BaseService<TEntity> where TEntity : IdentifierEntity
 {
     protected BaseService(BankDepositsContext context) => Context = context;
 
-    protected readonly BankDepositsContext Context;
+    public readonly BankDepositsContext Context;
 
     public async virtual Task<List<TEntity>> GetAllAsync() => await Context.Set<TEntity>().ToListAsync();
 

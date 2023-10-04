@@ -1,0 +1,37 @@
+@model BankDeposits.Mvc.Models.Account
+
+<h2>
+    Create Account
+</h2>
+
+@using (Html.BeginForm("Create", "Account"))
+{
+    <div class="form-group">
+        <label asp-for="Number"></label>
+        <input asp-for="Number" class="form-control"/>
+        <span asp-validation-for="Number" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Amount"></label>
+        <input asp-for="Amount" type="number" class="form-control"/>
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DepositorId"></label>
+        <select asp-for="DepositorId" class="form-control" asp-items="ViewBag.Depositors">
+            <option value="">Select a Depositor</option>
+        </select>
+        <span asp-validation-for="DepositorId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary"/>
+    </div>
+}
+
+@section Scripts
+{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

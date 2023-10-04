@@ -2,7 +2,8 @@
 
 <h2>Create Depositor</h2>
 
-<form asp-action="Create">
+@using (Html.BeginForm("Create", "Depositor"))
+{
     <div class="form-group">
         <label asp-for="LastName"></label>
         <input asp-for="LastName" class="form-control"/>
@@ -41,7 +42,7 @@
     <div class="form-group">
         <input type="submit" value="Create" class="btn btn-primary"/>
     </div>
-</form>
+}
 
 @section Scripts
 {

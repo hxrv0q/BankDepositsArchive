@@ -11,10 +11,10 @@ public class Account : IdentifierEntity
 
     [ForeignKey(nameof(DepositorId))]
     [NotMapped]
-    public Depositor Depositor { get; set; } = null!;
+    public Depositor? Depositor { get; set; }
 
     [Required, MaxLength(20)]
-    public string AccountNumber { get; set; } = null!;
+    public string Number { get; set; } = null!;
 
     [Column(TypeName = "money"), Required]
     public decimal Amount { get; set; }

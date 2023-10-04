@@ -11,7 +11,7 @@ public class Deposit : IdentifierEntity
 
     [ForeignKey(nameof(AccountId))]
     [NotMapped]
-    public Account Account { get; set; } = null!;
+    public Account? Account { get; set; }
 
     [Column(TypeName = "money"), Required]
     public decimal Amount { get; set; }
