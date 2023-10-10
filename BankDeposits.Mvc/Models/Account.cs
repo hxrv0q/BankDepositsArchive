@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BankDeposits.Mvc.Models;
 
 [Table("Account")]
-public class Account : IdentifierEntity
+public class Account : IdentityEntity
 {
     [Required]
     public Guid DepositorId { get; set; }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BankDeposits.Mvc.Models;
 
 [Table("Depositor")]
-public class Depositor : IdentifierEntity
+public class Depositor : IdentityEntity
 {
     [Required, MaxLength(50)]
     public string LastName { get; set; } = null!;

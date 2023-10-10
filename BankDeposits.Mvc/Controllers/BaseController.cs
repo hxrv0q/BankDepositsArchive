@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankDeposits.Mvc.Controllers;
 
-public abstract class BaseController<TEntity, TService> : Controller where TEntity : IdentifierEntity
+public abstract class BaseController<TEntity, TService> : Controller where TEntity : IdentityEntity
     where TService : AbstractService<TEntity>
 {
     private readonly TService _service;

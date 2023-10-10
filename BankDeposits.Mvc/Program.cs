@@ -1,4 +1,4 @@
-using BankDeposits.Mvc.Models;
+using BankDeposits.Mvc.Data;
 using BankDeposits.Mvc.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 // Add services to the container.
-builder.Services.AddDbContext<BankDepositsContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<DepositorService>();
 builder.Services.AddScoped<AccountService>();

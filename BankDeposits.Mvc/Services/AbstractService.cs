@@ -1,14 +1,15 @@
+using BankDeposits.Mvc.Data;
 using BankDeposits.Mvc.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankDeposits.Mvc.Services;
 
 public abstract class AbstractService<TEntity>
-    where TEntity : IdentifierEntity
+    where TEntity : IdentityEntity
 {
-    private readonly BankDepositsContext _context;
+    private readonly AppDbContext _context;
 
-    protected AbstractService(BankDepositsContext context) => _context = context;
+    protected AbstractService(AppDbContext context) => _context = context;
 
     public IEnumerable<TEntity> GetAll() => _context.Set<TEntity>().ToList();
 
